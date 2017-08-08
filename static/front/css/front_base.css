@@ -1,0 +1,35 @@
+body{
+    background:#f0f0f0;
+}
+
+.sign_box{
+    float:right;
+    line-height: 50px;
+}
+
+.sign_box a{
+    color:#999;
+    margin-right:10px;
+}
+
+.user_btn{
+    background:transparent;
+    border: transparent;
+    outline:none;
+}
+
+.user_btn:hover{
+    background:transparent;
+    border: transparent;
+    outline:none;
+}
+
+
+.main_content{
+    width:1280px;
+    min-height:600px;
+}
+
+.wp{
+    margin:80px auto;
+}

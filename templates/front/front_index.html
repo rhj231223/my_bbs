@@ -1,0 +1,145 @@
+{% extends 'front/front_base.html' %}
+
+{% block title %}
+    侃侃而坛-首页
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ static('front/css/front_index.css') }}">
+    <script src="{{ static('front/js/front_index.js') }}"></script>
+
+
+{% endblock %}
+
+
+{% block main_content %}
+    <div class="main">
+        <div class="container filter_box" id="filter_box" data-sort="{{ sort }}">
+            <div class="row filter">
+                <div class="col-xs-3 filter_one">
+                    <a class="tagA" href="{{ url_for('post.list_page',page=1,sort=1,board_id=board_id) }}">
+                        <span class="glyphicon glyphicon-time icon"></span>
+                        <div class="icon_word">最新帖子</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 filter_one">
+                    <a class="tagA" href="{{ url_for('post.list_page',page=1,sort=2,board_id=board_id) }}">
+                        <span class="glyphicon glyphicon-star icon"></span>
+                        <div class="icon_word">精华帖子</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 filter_one">
+                    <a class="tagA" href="{{ url_for('post.list_page',page=1,sort=3,board_id=board_id) }}">
+                        <span class="glyphicon glyphicon-heart icon"></span>
+                        <div class="icon_word">点赞最多</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 filter_one">
+                    <a class="tagA" href="{{ url_for('post.list_page',page=1,sort=4,board_id=board_id) }}">
+                        <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                        <div class="icon_word">评论最多</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="article_box">
+            {% for post in posts %}
+                <div class="media media_style">
+                    <div class="media-left media_left">
+                        <a href="">
+                            <img class="media-object avatar img-circle" src="{{ post.author.avatar }}" alt="">
+                        </a>
+                    </div>
+                    <div class="media-body media_body">
+                        <h4 class="media-heading media_heading">
+                            {% if post.highlight_id %}
+                                <a class="article_title" href="{{ url_for('post.post_detail',post_id=post.id) }}">
+                                    {{ post.title }}
+                                </a>
+                                <span class="label label-danger">精</span>
+                            {% else %}
+                                 <a class="article_title" href="{{ url_for('post.post_detail',post_id=post.id) }}">
+                                    {{ post.title }}
+                                </a>
+                            {% endif %}
+
+                        </h4>
+                        <div class="info">
+                            <span>{{ post.author.username }}</span>
+                            <span>{{ post.create_time |time_handler}}</span>
+                            <span class="glyphicon glyphicon-eye-open green"></span>
+                            <span>{{ post.read_count }}</span>
+                            <span class="glyphicon glyphicon-list-alt green"></span>
+                            <span>{{ post.comment_count or post.comments|length }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <div class="page_side">
+            <ul class="pagination">
+                <li>
+                    {% if current_page>1 %}
+                        <a href="{{ url_for('post.list_page',page=current_page-1,sort=sort,board_id=board_id) }}">
+                            <span>&laquo;</span>
+                        </a>
+                        {% else %}
+                        <span>&laquo;</span>
+
+                    {% endif %}
+                </li>
+                {% for page in pages %}
+                    {% if page==current_page %}
+                        <li class="active"><a href="{{ url_for('post.list_page',page=page,sort=sort,board_id=board_id) }}">{{ page }}</a></li>
+                    {% else %}
+                         <li><a href="{{ url_for('post.list_page',page=page,sort=sort,board_id=board_id) }}">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                <li><a href="">{{ '共%s页'|format(total_page) }}</a></li>
+                <li>
+                    {% if current_page<total_page %}
+                        <a href="{{ url_for('post.list_page',page=current_page+1,sort=sort,board_id=board_id) }}">
+                            <span>&raquo;</span>
+                        </a>
+                        {% else %}
+                        <span>&raquo;</span>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="board_section">
+        <a href="{{ url_for('post.add_post') }}" class="btn btn-warning btn-block add_btn">发布新帖子</a>
+        <ul class="list-group list_group">
+            <li class="list-group-item section">版块</li>
+
+            <a class="list-group-item {% if board_id==0 %}active{% endif %}" href="{{ url_for('post.list_page',page=current_page,sort=sort,board_id=0) }}">所有版块
+                <span class="badge">
+                    {{ total_board_count  }}
+                </span>
+            </a>
+            {% for board in boards %}
+                {% if board_id==board.id %}
+                <a class="list-group-item active" href="{{ url_for('post.list_page',page=current_page,sort=sort,board_id=board.id) }}">{{ board.name }}
+                    <span class="badge">
+                        {{ board.posts.filter_by(is_removed=False).count() }}
+                    </span>
+                </a>
+                {% else %}
+                <a class="list-group-item" href="{{ url_for('post.list_page',page=current_page,sort=sort,board_id=board.id) }}">{{ board.name }}
+                    <span class="badge">
+                        {{ board.posts.filter_by(is_removed=False).count()}}
+                    </span>
+                </a>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+
+
+{% endblock %}

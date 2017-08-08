@@ -1,0 +1,63 @@
+{% from 'common/common_macro.html' import macro %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>cms登陆页面</title>
+    {% include 'common/common_head.html' %}
+    <style>
+        body{
+            background:#e3e3e3;
+        }
+        .form_min{
+            width:300px;
+            margin:100px auto;
+        }
+
+        .title{
+            text-align: center;
+        }
+
+        .remember_word{
+            color:#000;
+        }
+
+    </style>
+</head>
+<body>
+    <form action="" class="form form-horizontal form_min" method="post">
+        <h2 class="title">请登录</h2>
+        {% if message %}
+            <p class="alert alert-danger">{{ message }}</p>
+        {% endif %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="">邮箱</label>
+            <input type="email" name="email" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="">密码</label>
+            <input type="password" name="password" class="form-control">
+        </div>
+
+        <div class="checkbox">
+            <div class="label">
+                <input type="checkbox" name="remember" value="1" id="">
+                <span class="remember_word">记住我</span>
+            </div>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <input type="submit" id="submit" class="btn btn-primary btn-block" value="登录">
+        </div>
+    </form>
+
+	
+	
+
+
+
+
+
+</body>
+</html>

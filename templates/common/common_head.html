@@ -1,0 +1,17 @@
+{% from 'common/common_macro.html' import static %}
+
+<meta charset="utf-8"/>
+<meta name="keywords" content="html,css,javascript" />
+<meta name="description" content="html,css,javascript" />
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{ static('common/base.css') }}">
+<link rel="stylesheet" href="{{ static('common/sweetalert/sweetalert.css') }}">
+<script src="{{ static('common/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ static('common/sweetalert/xtalert.js') }}"></script>
+<script src="{{ static('common/rhjajax.js') }}"></script>
+<script src="{{ static('common/xtparam.js') }}"></script>
+
