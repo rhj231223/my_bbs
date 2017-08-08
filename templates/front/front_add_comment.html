@@ -1,0 +1,39 @@
+{% extends 'front/front_base.html' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block head %}
+    <style>
+        .main_box{
+            background:#fff;
+            padding:30px;
+        }
+    </style>
+
+    <script src="{{ static('front/js/front_add_comment.js') }}"></script>
+
+{% endblock %}
+
+{% block main_content %}
+    <div class="main_box">
+        <form action="" class="form" method="post">
+            <div class="form-group">
+                <a href="{{ url_for('post.post_detail',post_id=post.id) }}">
+                    {{ post.title }}
+                </a>
+            </div>
+            {% if comment %}
+                <div class="form-group">
+                    <p>回复:{{ comment.author.username }}</p>
+                    <p>"{{ comment.content|safe }} "</p>
+                </div>
+            {% endif %}
+            {% include 'common/common_editor.html' %}
+            <div class="form-group">
+                <button id="submit" class="btn btn-warning" data-post-id="{{ post.id }}" {% if comment %}data-comment-id="{{ comment.id }}"{% endif %}>提交评论</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

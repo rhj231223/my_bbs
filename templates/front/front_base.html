@@ -1,0 +1,59 @@
+{%  from 'common/common_macro.html' import static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	{% include 'common/common_head.html' %}
+    <link rel="stylesheet" href="{{ static('front/css/front_base.css') }}">
+    {% block head %}{% endblock %}
+
+</head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-head">
+                <a href="" class="navbar-brand">侃侃而坛</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="{{ url_for('post.post_index') }}">首页</a></li>
+                </ul>
+                <div class="sign_box">
+                    {% if not front_user %}
+                        <span>
+                            <a href="{{ url_for('account.front_login') }}">登录</a>
+                            <a href="{{ url_for('account.front_regist') }}">注册</a>
+                        </span>
+                    {% else %}
+                        <div class="dropdown">
+                            <button type="button" class="user_btn" id="down1" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true">
+                                {{ front_user.username }}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="down1">
+                                <li><a href="">个人中心</a></li>
+                                <li><a href="{{ url_for('account.front_settings') }}">设置</a></li>
+                                <li><a href="{{ url_for('account.front_logout') }}">退出登录</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block main_body %}
+        <div class="main_content wp">
+            {% block main_content %}
+
+            {% endblock %}
+        </div>
+    {% endblock %}
+
+
+
+
+
+</body>
+</html>

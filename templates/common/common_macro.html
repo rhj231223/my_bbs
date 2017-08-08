@@ -1,0 +1,25 @@
+
+{% macro static(filename='') %}
+    {{ url_for('static',filename=filename) }}
+
+{% endmacro %}
+
+{% macro comment_group(comment,post) %}
+    {% if comment %}
+        {{comment_group(comment=comment.origin_comment,post=post) }}
+        <div class="media second_box">
+            <div class="media-left">
+                <a href=""><img src="{{ comment.author.avatar or static('front/images/logo.jpg') }}" alt="" class="media-object img-circle avatar"></a>
+            </div>
+            <div class="media-body second_body">
+                <span>{{ comment.author.username }}</span>
+                <span>{{ comment.create_time }}</span>
+                <div class="comment_content">
+                    {{ comment.content| safe }}
+                </div>
+                <a href="{{ url_for('post.front_add_comment',post_id=post.id,comment_id=comment.id) }}">回复</a>
+            </div>
+        </div>
+
+    {% endif %}
+{% endmacro %}

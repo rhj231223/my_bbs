@@ -1,0 +1,63 @@
+{%  extends 'front/front_base.html' %}
+
+{% block title %}
+    个人信息设置
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.staticfile.org/Plupload/2.1.1/moxie.js"></script>
+    <script src="https://cdn.staticfile.org/Plupload/2.1.1/plupload.dev.js"></script>
+    <script src="https://cdn.staticfile.org/qiniu-js-sdk/1.0.14-beta/qiniu.js"></script>
+    <script src="{{ static('common/xtqiniu.js') }}"></script>
+
+    <script src="{{ static('front/js/front_settings.js') }}"></script>
+
+    <style>
+
+        .wrapper_box{
+            padding:30px;
+            background:#fff;
+        }
+
+
+        .form_min{
+            width:300px;
+        }
+
+        #avatar_btn{
+            width:64px;
+            height:64px;
+        }
+    </style>
+{% endblock %}
+
+{% block main_content %}
+    <div class="wrapper_box">
+        <form action="" class="form form_min" method="post">
+            <h1>{{ self.title() }}</h1>
+            <br>
+            <div class="form-group">
+                <label for="">用户名</label>
+                <input type="text" name="username" value="{{ front_user.username }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="">真实姓名</label>
+                <input type="text" name="realname" value="{{ front_user.realname or '未填写' }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="">qq</label>
+                <input type="text" name="qq" value="{{ front_user.qq or '未填写' }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <img src="{{ front_user.avatar }}" alt="用户头像" id="avatar_btn" class="img-circle">
+            </div>
+            <div class="form-group">
+                <label for="">个性签名</label>
+                <textarea name="signature" id="" cols="30" rows="3" class="form-control">{{ front_user.signature or '未填写' }}</textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" id="submit">保存</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

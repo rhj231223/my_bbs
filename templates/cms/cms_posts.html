@@ -1,0 +1,134 @@
+{% extends 'cms/cms_base.html' %}
+
+{% block title %}
+    帖子管理
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+{% block head %}
+    <style>
+
+
+        .top_left{
+            float:left;
+        }
+
+        .top_right{
+            float:right
+        }
+
+        .page_side{
+            text-align: center;
+        }
+
+
+
+    </style>
+
+    <script src="{{ static('cms/js/cms_posts.js') }}"></script>
+
+
+{% endblock %}
+
+{% block main_content %}
+    <div class="top_box">
+        <div class="top_left">
+            <label for="">排序:</label>
+            <select name="sort">
+                <option value="1" {% if sort==1 %}selected{% endif %}>按时间</option>
+                <option value="2"{% if sort==2 %}selected{% endif %}>按加精</option>
+                <option value="3" {% if sort==3 %}selected{% endif %}>按点赞量</option>
+                <option value="4" {% if sort==4 %}selected{% endif %}>按评论数</option>
+            </select>
+        </div>
+        <div class="top_right">
+            <label for="">过滤版块:</label>
+            <select name="board_id">
+                <option value="0" {% if board_id==0 %}selected{% endif %}>所有版块</option>
+                {% for board in boards %}
+                    <option value="{{ board.id }}" {% if board_id==board.id %}selected{% endif %}>{{ board.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="">全部:</label>
+            <select name="all">
+                <option value="1" {% if all==1 %}selected{% endif %}>显示未被删除</option>
+                <option value="2" {% if all==2 %}selected{% endif %}>显示全部</option>
+                <option value="3" {% if all==3 %}selected{% endif %}>仅显示被删除</option>
+            </select>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>标题</td>
+                <td>发布时间</td>
+                <td>作者</td>
+                <td>版块</td>
+                <td>操作</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('post.post_detail',post_id=post.id) }}">
+                            {{ post.title }}
+                        </a>
+                    </td>
+                    <td>{{ post.create_time }}</td>
+                    <td>{{ post.author.username }}</td>
+                    <td>{{ post.board.name }}</td>
+                    <td>
+                        {% if not post.highlight %}
+                            <button class="btn btn-primary btn-xs highlight_btn" data-post-id="{{ post.id }}" data-is-highlight="1">加精</button>
+                        {% else %}
+                            <button class="btn btn-info btn-xs highlight_btn" data-post-id="{{ post.id }}" data-is-highlight="0">取消加精</button>
+                        {% endif %}
+
+                        {% if not post.is_removed %}
+                            <button class="btn btn-danger btn-xs removed_btn" data-post-id="{{ post.id }}" data-is-removed="1">移除</button>
+                        {% else %}
+                            <button  class="btn btn-warning btn-xs removed_btn" data-post-id="{{ post.id }}" data-is-removed="0">取消移除</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="page_side">
+        <ul class="pagination">
+            <li>
+                {% if current_page>1 %}
+                    <a href="{{ url_for('cms.cms_posts',page=current_page-1,sort=sort,board_id=board_id,all=all) }}"><span>&laquo;</span></a>
+                {% else %}
+                    <span>&laquo;</span>
+                {% endif %}
+            </li>
+
+                {% for page in pages %}
+                    {% if page==current_page %}
+                        <li class="active"><a href="{{ url_for('cms.cms_posts',page=page,sort=sort,board_id=board_id,all=all) }}"><span>{{ page }}</span></a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('cms.cms_posts',page=page,sort=sort,board_id=board_id,all=all) }}"><span>{{ page }}</span></a></li>
+                    {% endif %}
+                {% endfor %}
+
+            <li><span>{{ '共%s页'|format(total_page) }}</span></li>
+
+            <li>
+                {% if current_page<total_page %}
+                    <a href="{{ url_for('cms.cms_posts',page=current_page+1,sort=sort,board_id=board_id,all=all) }}"><span>&raquo;</span></a>
+                {% else %}
+                    <span>&raquo;</span>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}

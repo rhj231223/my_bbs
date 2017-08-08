@@ -1,0 +1,72 @@
+{% extends 'cms/cms_base.html' %}
+
+{% block title %}
+    添加CMS用户
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+{% block head %}
+    <style>
+
+
+        .form_group{
+            margin-bottom:10px;
+        }
+
+        .add_btn{
+            margin-left:80px;
+        }
+
+        .checkbox{
+            padding-left:8px;
+        }
+
+        .checkbox label{
+            padding-left:48px;
+        }
+
+    </style>
+
+    <script src="{{ static('cms/js/cms_addcmsuser.js') }}"></script>
+
+{% endblock %}
+
+{% block main_content %}
+    <form action="" class="form-horizontal form_min" method="post">
+        <div class="form-group form_group">
+            <label for="" class="control-label col-sm-3">邮箱:</label>
+            <div class="col-sm-9">
+                <input type="email" name="email" class="form-control">
+            </div>
+        </div>
+        <div class="form-group form_group">
+            <label for="" class="control-label col-sm-3">用户名:</label>
+            <div class="col-sm-9">
+                <input type="text" name="username" class="form-control">
+            </div>
+        </div>
+        <div class="form-group form_group">
+            <label for="" class="control-label col-sm-3">密码:</label>
+            <div class="col-sm-9">
+                <input type="password" name="password" class="form-control">
+            </div>
+        </div>
+
+        <div class="checkbox">所属组:
+            {% for role in roles %}
+                <label class="check_style">
+                    <input type="checkbox" name="roles" value="{{ role.id }}">{{ role.name }}
+                </label>
+            {% endfor %}
+        </div>
+        <br>
+        <div class="from-group">
+            <input type="submit" id="submit" value="立即添加" class="btn btn-primary add_btn">
+        </div>
+
+
+    </form>
+{% endblock %}

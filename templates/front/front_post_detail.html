@@ -1,0 +1,269 @@
+{% extends 'front/front_base.html' %}
+{% from 'common/common_macro.html' import comment_group %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+
+{% block head %}
+
+    <style>
+        .main_box{
+            width:960px;
+            min-height:600px;
+            display:inline-block;
+        }
+
+        .article_box{
+            min-height: 400px;
+            background:#fff;
+            padding:30px;
+            margin-bottom: 14px;
+            border:1px solid #e3e3e3;
+            overflow: hidden;
+        }
+
+        .comment_box{
+            min-height: 200px;
+            background:#fff;
+            padding:30px;
+            border:1px solid #e3e3e3;
+        }
+        .title_box{
+            text-align:center;
+            border-bottom:1px solid #e7e7e7;
+            overflow: hidden;
+        }
+
+        .title_box h1{
+            margin:10px 0 40px 0;
+        }
+
+        .title_box span{
+            color:#999;
+        }
+
+
+        .title_left,.title_right{
+            height:32px;
+            line-height: 32px;
+        }
+
+        .title_left{
+            float:left;
+        }
+
+        .title_right{
+            float:right;
+        }
+
+        .title_left>span:nth-child(even),.title_right>span:nth-child(2){
+            margin-right:8px;
+        }
+
+        .content_box{
+            padding:40px 0;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .add_comment_group{
+            height:82px;
+            float:right;
+            margin-top:10px;
+        }
+
+        .comment_box h4{
+            color:#f60;
+        }
+
+        .content{
+            padding-bottom:10px;
+        }
+
+        .avatar{
+            width:50px;
+            height:50px;
+        }
+
+
+        .media_body{
+            width:100%;
+            border-bottom:1px solid #e9e9e9;
+        }
+
+        .media-body>span{
+            color:#999;
+            font-size:12px;
+        }
+
+        .second_box{
+            width:100%;
+            padding:30px 30px 0 30px;
+            background:#f0f0f0;
+            margin-top:0;
+            border:1px solid #fff;
+        }
+
+        .second_body{
+            width:806px;
+            border-bottom:1px solid #e9e9e9;
+        }
+
+        .author_info{
+            margin-bottom:14px;
+            display: inline-block;
+        }
+
+        .comment_number{
+            display: inline-block;
+            float:right
+        }
+
+        .author_info>span{
+            color:#999;
+            font-size:12px
+        }
+
+        .comment_content{
+            padding-top:10px;
+            font-size: 16px;
+        }
+
+        .media_body>a,.second_body>a{
+            color:#999;
+            float:right;
+            height:32px;
+            line-height:32px;
+        }
+
+        .right_box{
+            float:right;
+            width:300px;
+            height:240px;
+            padding:30px;
+            background:#fff;
+            text-align: center;
+        }
+
+        .avatar_right{
+            width:64px;
+            height:64px;
+
+        }
+
+        .avatar_mini{
+            width:20px;
+            height:20px;
+        }
+
+
+        .right_box>div{
+            margin:10px 0;
+        }
+
+        .right_author{
+            font-size:16px;
+        }
+
+
+
+    </style>
+    <script src="{{ static('front/js/front_post_detail.js') }}"></script>
+{% endblock %}
+
+{% block main_content %}
+    <div class="main_box">
+        <div class="article_box">
+            <div class="title_box">
+                <h1>{{ post.title }}</h1>
+                <div class="title_left">
+                    <span>发表时间:</span>
+                    <span>{{ post.create_time }}</span>
+                    <span>作者:</span>
+                    <span>{{ post.author.username }}</span>
+                    <span>所属版块:</span>
+                    <span>{{ post.board.name }}</span>
+                </div>
+                <div class="title_right">
+                    <span>阅读数</span>
+                    <span>{{ post.read_count }}</span>
+                    <span>评论数:</span>
+                    <span>{{ comment_count }}</span>
+                </div>
+            </div>
+            <div class="content_box">
+                 <p class="content">{{ post.content|safe }}</p>
+                {% if not g.front_user %}
+                    <a href="{{ url_for('account.front_login')}}" class="btn btn-info btn-xs">点赞</a>
+                {% elif g.front_user.id not in star_author_ids %}
+                    <button class="btn btn-info btn-xs" id="star_btn"
+                            data-post-id="{{ post.id }}" data-is-star="1">点赞</button>
+                {% else %}
+                    <button class="btn btn-warning btn-xs" id="star_btn"
+                            data-post-id="{{ post.id }}" data-is-star="0">已赞</button>
+                {% endif %}
+                {% for star in stars %}
+                    <img src="{{ star.author.avatar }}" alt="" class="avatar_mini img-circle">
+                {% endfor %}
+                
+            </div>
+            <div class="add_comment_group">
+                <a href="{{ url_for('post.front_add_comment',post_id=post.id) }}" class="btn btn-primary" id="add_comment_btn">发表评论</a>
+            </div>
+        </div>
+        <div class="comment_box">
+            <h4>评论列表</h4>
+            <ul class="media-list">
+                {% for comment in comments %}
+                        <li class="media media_box">
+                        <div class="media-left">
+                            <a href=""><img src="{{ comment.author.avatar or static('front/images/logo.jpg') }}" alt="" class="media-object img-circle avatar"></a>
+                        </div>
+                        <div class="media-body media_body">
+                            <div class="author_info">
+                                <span>{{ comment.author.username }}</span>
+                                <span>{{ comment.create_time }}</span>
+                            </div>
+{#                            <span class="comment_number">{{ loop.index }}</span>#}
+                            {{ comment_group(comment=comment.origin_comment,post=post) }}
+
+                            <div class="comment_content">
+                                {{ comment.content| safe }}
+                            </div>
+                            <a href="{{ url_for('post.front_add_comment',post_id=post.id,comment_id=comment.id) }}">回复</a>
+                        </div>
+                    </li>
+                {% endfor %}
+                 {% for comment in diff_comments %}
+                        <li class="media media_box">
+                        <div class="media-left">
+                            <a href=""><img src="{{ comment.author.avatar or static('front/images/logo.jpg') }}" alt="" class="media-object img-circle avatar"></a>
+                        </div>
+                        <div class="media-body media_body">
+                            <div class="author_info">
+                                <span>{{ comment.author.username }}</span>
+                                <span>{{ comment.create_time }}</span>
+                            </div>
+{#                            <span class="comment_number">{{ loop.index+redis_total }}</span>#}
+                            {{ comment_group(comment=comment.origin_comment,post=post) }}
+
+                            <div class="comment_content">
+                                {{ comment.content| safe }}
+                            </div>
+                            <a href="{{ url_for('post.front_add_comment',post_id=post.id,comment_id=comment.id) }}">回复</a>
+                        </div>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="right_box">
+        <a href=""><img src="{{ post.author.avatar }}" alt="" class="img-circle avatar_right"></a>
+        <div class="right_author">{{ post.author.username }}</div>
+        <div class="right_point ">积分:{{ post.author.points }}</div>
+        <button class="btn btn-warning">Ta的主页</button>
+    </div>
+
+{% endblock %}

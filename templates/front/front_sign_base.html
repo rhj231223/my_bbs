@@ -1,0 +1,52 @@
+{% from 'common/common_macro.html' import static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}{% endblock %}</title>
+    {% include 'common/common_head.html' %}
+
+    <link rel="stylesheet" href="{{ static('front/css/front_sign_base.css') }}">
+    <script src="{{ static('front/js/front_captcha.js') }}"></script>
+
+
+    {% block head %}{% endblock %}
+
+
+
+</head>
+<body>
+    <div class="wp">
+        <img src="{{ static('front/images/logo.jpg') }}" alt="" class="avatar">
+        <h2>{% block page_title %}{% endblock %}</h2>
+        <br>
+        <form action="" class="form form_min" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if message %}
+                <p class="alert alert-danger">{{ message }}</p>
+            {% endif %}
+            {% block main_form %}
+
+            {% endblock %}
+
+            <div class="form-group form_captcha_min">
+                <div class="input-group">
+                    <input type="text" name="graph_captcha" class="form-control" placeholder="图片验证码">
+                    <div class="input-group-addon graph_img " id="graph_btn">
+                        <img src="{{ url_for('account.graph_captcha') }}" alt="验证码图片">
+                    </div>
+                </div>
+            </div>
+
+            {% block submit_button %}
+            
+            {% endblock %}
+        </form>
+
+    </div>
+
+
+
+
+	
+</body>
+</html>
